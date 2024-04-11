@@ -1,5 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 /*
+ * Tutorial from:
+ * https://learn.microsoft.com/en-us/visualstudio/get-started/csharp/tutorial-console?view=vs-2022#revise-the-code
+ * 
 bool repeatGame = true;
 while (repeatGame)
 {
@@ -73,7 +76,7 @@ class Calculator
                 result = num1 + num2;
                 break;
             case "s":
-                result = num2 - num1;
+                result = num1 - num2;
                 break;
             case "m":
                 result = num1 * num2;
@@ -131,36 +134,43 @@ class Program
                 numInput2 = Console.ReadLine();
             }
 
-            // Ask the user to choose an operator.
-            Console.WriteLine("Choose an operator from the list:");
-            Console.WriteLine("\ta - Add");
-            Console.WriteLine("\ts - Subtract");
-            Console.WriteLine("\tm - Multiply");
-            Console.WriteLine("\td - Divide");
-            Console.Write("Your option? ");
+            string? op = null;
 
-            string? op = Console.ReadLine();
+            // Loop if the user inputs the wrong operator
+            while (op == null || !Regex.IsMatch(op, "[a|s|m|d]"))
+            {
+                // Ask the user to choose an operator.
+                Console.WriteLine("Choose an operator from the list:");
+                Console.WriteLine("\ta - Add");
+                Console.WriteLine("\ts - Subtract");
+                Console.WriteLine("\tm - Multiply");
+                Console.WriteLine("\td - Divide");
+                Console.Write("Your option? ");
 
-            // Validate input is not null, and matches the pattern
-            if (op == null || !Regex.IsMatch(op, "[a|s|m|d]"))
-            {
-                Console.WriteLine("Error: Unrecognized input.");
-            }
-            else
-            {
-                try
+                op = Console.ReadLine();
+
+                // Validate input is not null, and matches the pattern
+                if (op == null || !Regex.IsMatch(op, "[a|s|m|d]"))
                 {
-                    result = Calculator.DoOperation(cleanNum1, cleanNum2, op);
-                    if (double.IsNaN(result))
-                    {
-                        Console.WriteLine("This operation will result in a mathematical error.");
-                    }
-                    else Console.WriteLine("Your result: {0:0.##}\n", result);
-                    // same as else Console.WriteLine($"Your result: {result:0.##}\n");
+                    Console.WriteLine("Error: Unrecognized input. Please try again: \n");
                 }
-                catch (Exception e)
+
+                else
                 {
-                    Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
+                    try
+                    {
+                        result = Calculator.DoOperation(cleanNum1, cleanNum2, op);
+                        if (double.IsNaN(result))
+                        {
+                            Console.WriteLine("This operation will result in a mathematical error.");
+                        }
+                        else Console.WriteLine("Your result: {0:0.##}\n", result);
+                        // same as else Console.WriteLine($"Your result: {result:0.##}\n");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Oh no! An exception occurred trying to do the math.\n - Details: " + e.Message);
+                    }
                 }
             }
             Console.WriteLine("------------------------\n");
